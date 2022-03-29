@@ -4,7 +4,6 @@ import java.util.Stack;
 import java.util.Collections;
 import java.lang.NumberFormatException;
 import java.util.Random;
-import java.io.*;
 
 public class Dealer implements Person {
   public static int dealerWinner = 0;
@@ -59,6 +58,10 @@ public class Dealer implements Person {
       player.printHand();
     }
 
+    round();
+  }
+
+  public void round() {
     while (roundIsOn) {
       String s = askPlayer();
       if (s.equals("H")) {
@@ -71,11 +74,15 @@ public class Dealer implements Person {
         checkCount();
         roundIsOn = false;
         detectWinner();
+      } else if (s.equals("SP")) {
+        playerSplitting();
+        roundIsOn = false;
       } else if (s.equals("S")) {
         playerStanding();
         roundIsOn = false;
       }
     }
+    return;
   }
 
   public void shuffle() {
@@ -91,7 +98,6 @@ public class Dealer implements Person {
     }
     Random r = new Random();
     delimiterPosition = 270 + r.nextInt(16);
-    // Card delim = new Card(true);
     deck.insertElementAt(new Card(true), delimiterPosition);
   }
 

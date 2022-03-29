@@ -16,7 +16,6 @@ public class Main {
     maxCount = 10;
 
     d.game();
-
   }
 
   public static void roundEnded() {
