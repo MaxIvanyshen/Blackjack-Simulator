@@ -1,6 +1,7 @@
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Stack;
+
 import java.util.Collections;
 import java.lang.NumberFormatException;
 import java.util.Random;
@@ -13,6 +14,8 @@ public class Dealer implements Person {
   private int round = 0;
   private int delimiterPosition;
   public boolean roundIsOn = false;
+
+  private boolean doubled = false;
 
   public Winner result;
 
@@ -69,13 +72,16 @@ public class Dealer implements Person {
         player.countPoints();
         checkCount();
       } else if (s.equals("D")) {
+        doubled = true;
+        player.bet *= 2;
         hit();
         player.countPoints();
         checkCount();
         roundIsOn = false;
         detectWinner();
       } else if (s.equals("SP")) {
-        playerSplitting();
+        // playerSplitting();
+        System.out.println("SPlit");
         roundIsOn = false;
       } else if (s.equals("S")) {
         playerStanding();
@@ -156,7 +162,6 @@ public class Dealer implements Person {
   public void checkCount() {
     // System.out.println("Array size: " + this.hand.size());
     if (this.hand.get(1).hidden) {
-
       if (count == 10) {
         if (this.hand.get(1).getValue().equals("A")) {
           if (player.hand.size() == 2 && player.count == 21) {
@@ -174,6 +179,7 @@ public class Dealer implements Person {
       // System.out.println("Player's count: " + player.count);
       if (player.hand.size() == 2 && player.count == 21) {
         System.out.println("BLACKJACK");
+        player.bet *= 1.5;
         result = Winner.PLAYER;
         roundIsOn = false;
         endRound();
@@ -254,6 +260,13 @@ public class Dealer implements Person {
 
   private void endRound() {
 
+    if(result == Winner.PLAYER) {
+      player.money += player.bet;
+    }
+    else if(result == Winner.DEALER) {
+      player.money -= player.bet;
+    }
+
     printResult();
     // System.out.println("size before clear: " + this.hand.size());
     this.hand.clear();
@@ -263,9 +276,17 @@ public class Dealer implements Person {
     count = 0;
     roundIsOn = false;
     // Main.printSummary();
+  
+    if(doubled) {
+      player.bet /= 2;
+    }
+
+    Main.lastWinner = result;
 
     System.out.println("ROUND ENDED");
-    System.exit(0);
+
+    System.out.println("Player's money: " + player.money);
+    // System.exit(0);
     // Main.roundEnded();
     // System.exit(0);
   }

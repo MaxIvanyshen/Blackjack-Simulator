@@ -10,12 +10,29 @@ public class Main {
   private static Player p = new Player();
   private static Dealer d = new Dealer(p);
 
+  public static Winner lastWinner = Winner.DEALER; 
+
   public static void main(String[] args) {
     p.setDealer(d);
 
     maxCount = 10;
-
-    d.game();
+    for(int i = 0; i < 50; i++) {
+      try {
+        if(p.money <= 0) {
+          System.out.println("LOST ALL THE MONEY");
+          break;
+        }
+        if(lastWinner == Winner.PLAYER) {
+          p.bet += 100;
+        }
+        else if(lastWinner == Winner.DEALER) {
+          p.bet = 100;
+        }
+        d.game();
+      } catch (Exception e) {
+        continue;
+      }
+    }
   }
 
   public static void roundEnded() {

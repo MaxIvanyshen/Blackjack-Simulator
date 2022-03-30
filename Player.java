@@ -5,6 +5,11 @@ import java.util.Scanner;
 import java.io.*;
 
 public class Player implements Person {
+
+  public int money = 1000;
+
+  public int bet =  100;
+
   public int count = 0;
 
   public List<Card> hand = new ArrayList<Card>();
@@ -18,6 +23,8 @@ public class Player implements Person {
       while (sc.hasNextLine()) {
         strat.add(sc.nextLine());
       }
+
+      sc.close();
     } catch (Exception e) {
       e.printStackTrace();
     }
