@@ -15,10 +15,9 @@ public class Main {
   public static void main(String[] args) {
     p.setDealer(d);
 
-    maxCount = 10;
-    for(int i = 0; i < 50; i++) {
+    for(int i = 0; i < 1; i++) {
       try {
-        if(p.money <= 0) {
+        if(p.money < 100) {
           System.out.println("LOST ALL THE MONEY");
           break;
         }
@@ -28,6 +27,8 @@ public class Main {
         else if(lastWinner == Winner.DEALER) {
           p.bet = 100;
         }
+
+	
         d.game();
       } catch (Exception e) {
         continue;

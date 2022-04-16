@@ -14,6 +14,11 @@ public class Dealer implements Person {
   private int round = 0;
   private int delimiterPosition;
   public boolean roundIsOn = false;
+  private boolean splitted = false;
+
+  public List<Winner> splitResult = new ArrayList<>();
+
+  private String s;
 
   private boolean doubled = false;
 
@@ -66,7 +71,7 @@ public class Dealer implements Person {
 
   public void round() {
     while (roundIsOn) {
-      String s = askPlayer();
+      s = askPlayer();
       if (s.equals("H")) {
         hit();
         player.countPoints();
@@ -79,8 +84,8 @@ public class Dealer implements Person {
         checkCount();
         roundIsOn = false;
         detectWinner();
-      } else if (s.equals("SP")) {
-        // playerSplitting();
+      } else if (s.equals("SP")) { 
+        playerSplitting();
         System.out.println("SPlit");
         roundIsOn = false;
       } else if (s.equals("S")) {
@@ -219,6 +224,24 @@ public class Dealer implements Person {
     }
   }
 
+  public void playerSplitting() {
+    this.splitted = true;
+    int bet2 = player.bet;
+    List<List<Card>> playerHands = new ArrayList<>();
+    playerHands.add(player.hand);
+
+    Dealer dTMP = new Dealer(new Player());
+    dTMP.shuffle();
+    dTMP.deal();
+    dTMP.hand = this.hand;
+    dTMP.player.hand.set(0, this.player.hand.get(1));
+    this.player.hand.set(1, this.deck.pop());
+    dTMP.player.bet = bet2;
+
+    dTMP.round();
+    this.splitResult.add(dTMP.result);
+  }
+
   @Override
   public void printHand() {
     for (int i = 0; i < this.hand.size(); ++i) {
@@ -260,11 +283,21 @@ public class Dealer implements Person {
 
   private void endRound() {
 
-    if(result == Winner.PLAYER) {
-      player.money += player.bet;
+    if(splitted) {
+      if(splitResult.get(0) == Winner.PLAYER){
+        player.money += player.bet;
+      }
+      else if(splitResult.get(0) == Winner.DEALER) {
+        player.money -= player.bet;
+      }
     }
-    else if(result == Winner.DEALER) {
-      player.money -= player.bet;
+    else {
+      if(result == Winner.PLAYER) {
+        player.money += player.bet;
+      }
+      else if(result == Winner.DEALER) {
+        player.money -= player.bet;
+      }
     }
 
     printResult();
@@ -313,12 +346,20 @@ public class Dealer implements Person {
   }
 
   public void printResult() {
-
-    if (result == Winner.PLAYER)
-      Main.winCount++;
-    if (result == Winner.DEALER)
-      Main.loseCount++;
+    if(splitted) {
+      if (result == Winner.PLAYER)
+        Main.winCount++;
+      if (result == Winner.DEALER)
+        Main.loseCount++;
+      System.out.println("In one hand won " + splitResult.get(0) + "\n In other hand: " + splitResult.get(1));
+    }
+    else {
+      if (result == Winner.PLAYER)
+        Main.winCount++;
+      if (result == Winner.DEALER)
+        Main.loseCount++;
     System.out.println(result);
+    }
   }
 
 }
