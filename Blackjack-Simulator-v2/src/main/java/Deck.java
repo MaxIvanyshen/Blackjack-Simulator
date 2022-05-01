@@ -9,6 +9,8 @@ public class Deck {
 
     private int placeholderPositon;
 
+    private boolean shuffled;
+
     private List<String> cardsList = new ArrayList<>(
             Arrays.asList("2S", "3S", "4S", "5S", "6S", "7S", "8S", "9S", "10S", "JS", "QS", "KS", "AS",
                     "2H", "3H", "4H", "5H", "6H", "7H", "8H", "9H", "10H", "JH", "QH", "KH", "AH",
@@ -31,19 +33,13 @@ public class Deck {
         return deck.peek();
     }
     public int getSizeInCards() {
-        if(deck.size() == 0)
-            return 0;
-        if(deck.size() % 2 != 0)
+        if(shuffled)
             return deck.size() - 1;
         return deck.size();
     }
 
     public int getSizeInDecks() {
-        if(deck.size() == 0)
-            return 0;
-        if(deck.size() % 2 != 0)
-            return (deck.size() - 1) / 52;
-        return deck.size() / 52;
+        return getSizeInCards() / 52;
     }
 
     public int getShuffledDeckSize() {
@@ -61,6 +57,7 @@ public class Deck {
         int placeholderMaxPosition = Math.round((float)getSizeInCards() / 100 * 95);
         placeholderPositon = new Random().nextInt(placeholderMinPosition, placeholderMaxPosition);
         deck.insertElementAt(placeholder, placeholderPositon);
+        shuffled = true;
     }
 
     public int getPlaceholderPosition() {

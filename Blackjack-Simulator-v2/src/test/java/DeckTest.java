@@ -59,6 +59,14 @@ public class DeckTest {
     }
 
     @Test
+    public void getDeckSizeAfterPop() {
+        deck.createDeck(1);
+        deck.shuffle();
+        deck.pop();
+        assertThat(deck.getSizeInCards()).isEqualTo(51);
+    }
+
+    @Test
     public void pop() {
         deck.createDeck(1);
         deck.pop();
