@@ -7,7 +7,7 @@ public class Deck {
 
     private Card placeholder = new DeckPlaceholder();
 
-    private int placeholderPositon;
+    private int placeholderPosition;
 
     private boolean shuffled;
 
@@ -55,12 +55,12 @@ public class Deck {
         Collections.shuffle(deck);
         int placeholderMinPosition = Math.round((float)getSizeInCards() / 100 * 65);
         int placeholderMaxPosition = Math.round((float)getSizeInCards() / 100 * 95);
-        placeholderPositon = new Random().nextInt(placeholderMinPosition, placeholderMaxPosition);
-        deck.insertElementAt(placeholder, placeholderPositon);
+        placeholderPosition = new Random().nextInt(placeholderMinPosition, placeholderMaxPosition);
+        deck.insertElementAt(placeholder, placeholderPosition);
         shuffled = true;
     }
 
     public int getPlaceholderPosition() {
-        return placeholderPositon;
+        return placeholderPosition;
     }
 }

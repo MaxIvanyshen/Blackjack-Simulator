@@ -35,16 +35,16 @@ public class Card {
     public char getSuit() {
         boolean is10 = card.length() == 3;
         if(is10)
-            return card.toCharArray()[2]; // {'1', '0', 'H'} -> returns 'H'
-        return card.toCharArray()[1];     // {'3', 'H'} -> returns 'H'
+            return card.toCharArray()[2]; // {'1', '0', 'H'}
+        return card.toCharArray()[1];     // {'3', 'H'}
     }
 
     public String getValue() {
         boolean is10 = card.length() == 3;
         if(is10)
-            return card.substring(0, 2); // {'1', '0', 'H'} -> returns '10'
+            return card.substring(0, 2); // {'1', '0', 'H'}
 
-        return card.substring(0, 1);     // {'3', 'H'} -> returns '3'
+        return card.substring(0, 1);     // {'3', 'H'}
     }
 
     public int getCount() {
