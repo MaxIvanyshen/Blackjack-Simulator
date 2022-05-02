@@ -26,6 +26,8 @@ public class Deck {
     }
 
     public Card pop() {
+        if(deck.size() <= getPlaceholderPosition())
+            shuffle();
         return deck.pop();
     }
 
@@ -62,5 +64,9 @@ public class Deck {
 
     public int getPlaceholderPosition() {
         return placeholderPosition;
+    }
+
+    public boolean isEmpty() {
+        return deck.size() == 0;
     }
 }

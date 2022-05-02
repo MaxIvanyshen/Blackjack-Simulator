@@ -97,4 +97,22 @@ public class DeckTest {
 
         assertThat(deck.getPlaceholderPosition()).isBetween(placeholderMinPosition, placeholderMaxPosition);
     }
+
+    @Test
+    public void shuffleAfterGoingToPlaceholderPosition() {
+        deck.createDeck(1);
+        deck.shuffle();
+
+        int oldPlaceholderPosition = deck.getPlaceholderPosition();
+
+        for(int i = 0; i < deck.getPlaceholderPosition() + 1; i++)
+            deck.pop();
+
+        assertThat(deck.getPlaceholderPosition()).isNotEqualTo(oldPlaceholderPosition);
+    }
+
+    @Test
+    public void isEmpty() {
+        assertThat(deck.isEmpty());
+    }
 }

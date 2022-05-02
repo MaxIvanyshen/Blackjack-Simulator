@@ -5,6 +5,7 @@ import java.util.Random;
 
 public class Card {
 
+    public boolean isHidden;
     private String card;
 
     private List<String> cardsList = new ArrayList<>(
@@ -28,6 +29,8 @@ public class Card {
     }
 
     public String getCard() {
+        if(isHidden)
+            return "Hidden card";
         return card;
     }
 
@@ -85,4 +88,13 @@ public class Card {
         return 11;
     }
 
+    public String hide() {
+        isHidden = true;
+        return "Hidden card";
+    }
+
+    public String show() {
+        isHidden = false;
+        return card;
+    }
 }

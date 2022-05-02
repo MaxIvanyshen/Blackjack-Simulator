@@ -102,4 +102,20 @@ public class CardTest {
         assertThat(c.getCount(11)).isEqualTo(1);
     }
 
+    @Test
+    public void checkHiddenCard() {
+        Card c = initializedCard("AS");
+        String s = c.hide();
+
+        assertThat(s).isEqualTo("Hidden card");
+    }
+
+    @Test
+    public void showHiddenCard() {
+        Card c = initializedCard("AS");
+        c.hide();
+
+        assertThat(c.show()).isEqualTo("AS");
+    }
+
 }
