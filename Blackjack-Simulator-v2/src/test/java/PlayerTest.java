@@ -69,12 +69,22 @@ public class PlayerTest {
         Hand dealersHand = new Hand(new Card("2H"), new Card("4H"));
         assertThat(p.getAction(dealersHand)).isEqualTo("SP");
     }
-//
-//    @Test
-//    public void getActionWith3Cards() {
-//        Gambler p = new Player(new Hand(new Card("3H"), new Card("3D")));
-//        Hand dealersHand = new Hand(new Card("10H"), new Card("4H"));
-//        assertThat(p.getAction(dealersHand)).isEqualTo("SP");
-//    }
+
+    @Test
+    public void getActionWith3Cards() {
+        Gambler p = new Player(new Hand(new Card("6H"), new Card("2D")));
+        p.getHand().add(new Card("2H"));
+        Hand dealersHand = new Hand(new Card("10H"), new Card("4H"));
+        assertThat(p.getAction(dealersHand)).isEqualTo("H");
+    }
+
+    @Test
+    public void getActionWith4Cards() {
+        Gambler p = new Player(new Hand(new Card("6H"), new Card("2D")));
+        p.getHand().add(new Card("2H"));
+        p.getHand().add(new Card("6S"));
+        Hand dealersHand = new Hand(new Card("10H"), new Card("4H"));
+        assertThat(p.getAction(dealersHand)).isEqualTo("H");
+    }
 
 }
