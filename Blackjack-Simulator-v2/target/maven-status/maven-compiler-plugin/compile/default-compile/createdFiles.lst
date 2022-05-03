@@ -4,4 +4,6 @@ Deck.class
 Player.class
 Card.class
 DeckPlaceholder.class
+Result.class
 Dealer.class
+Round.class

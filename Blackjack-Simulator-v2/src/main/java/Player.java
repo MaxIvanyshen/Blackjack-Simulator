@@ -8,6 +8,8 @@ public class Player implements Gambler {
 
     private final Hand hand;
 
+    private long money = 10000;
+
     public Player() {
         this.hand = new Hand();
     }
@@ -19,6 +21,14 @@ public class Player implements Gambler {
     @Override
     public Hand getHand() {
         return this.hand;
+    }
+
+    public long getMoney() {
+        return money;
+    }
+
+    public void setMoney(long money) {
+        this.money = money;
     }
 
     @Override
@@ -80,6 +90,7 @@ public class Player implements Gambler {
 
         return rowsList.get(neededRow).split(" ")[neededColumn];
     }
+
 }
 
 

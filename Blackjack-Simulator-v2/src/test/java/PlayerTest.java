@@ -87,4 +87,17 @@ public class PlayerTest {
         assertThat(p.getAction(dealersHand)).isEqualTo("H");
     }
 
+    @Test
+    public void getMoney() {
+        Player p = new Player();
+        assertThat(p.getMoney()).isEqualTo(10000);
+    }
+
+    @Test
+    public void setMoney() {
+        Player p = new Player();
+        p.setMoney(p.getMoney() * 2);
+        assertThat(p.getMoney()).isEqualTo(20000);
+    }
+
 }

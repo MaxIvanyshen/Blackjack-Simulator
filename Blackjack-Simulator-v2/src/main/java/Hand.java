@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class Hand {
@@ -11,9 +12,8 @@ public class Hand {
 
     public Hand() {}
 
-    public Hand(Card first, Card second) {
-        cardsInHandList.add(first);
-        cardsInHandList.add(second);
+    public Hand(Card... cards) {
+        Collections.addAll(cardsInHandList, cards);
     }
 
     public Hand(List<Card> hand) {
@@ -36,7 +36,6 @@ public class Hand {
         }
 
         return count;
-//        return cardsInHandList.stream().mapToInt(card -> card.getCount()).sum();
     }
 
     public int getCardsNumber() {

@@ -67,9 +67,8 @@ public class Card {
 
         } catch(NumberFormatException e) {
 
-            if(isAce) {
+            if(isAce)
                 return 11;
-            }
 
             return 10;
         }
