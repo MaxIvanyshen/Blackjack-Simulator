@@ -76,8 +76,10 @@ public class Round {
         else if(dealerHand.getCount() > 21)
             setResult(Result.PLAYER);
 
-        if(blackjackPlayer)
+        if(blackjackPlayer) {
+            bet *= 1.5;
             setResult(determineResult(playerHand, dealerHand));
+        }
         else if(blackjackDealer)
             setResult(determineResult(playerHand, dealerHand));
 
@@ -134,9 +136,20 @@ public class Round {
             if(getResult() != null)
                 break;
 
+            operateActions();
+
             if(!roundIsOn)
                 break;
         }
+
+        addOrSubtractMoney();
+    }
+
+    private void addOrSubtractMoney() {
+        if(getResult() == Result.DEALER)
+            player.setMoney(player.getMoney() - bet);
+        if(getResult() == Result.PLAYER)
+            player.setMoney(player.getMoney() + bet);
     }
 
     private void operateDealerAction() {
@@ -165,6 +178,8 @@ public class Round {
         }
 
         else if(playerAction.equals("D")) {
+            bet *= 2;
+
             hit(player.getHand());
             checkCounts(player.getHand(), dealer.getHand());
 

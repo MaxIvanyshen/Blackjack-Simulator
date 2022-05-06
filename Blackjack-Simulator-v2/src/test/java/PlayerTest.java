@@ -43,6 +43,13 @@ public class PlayerTest {
     }
 
     @Test
+    public void getActionWhenCountIsHigherThan8AndLowerThan17_2() {
+        Gambler p = new Player(new Hand(new Card("10H"), new Card("7H")));
+        Hand dealersHand = new Hand(new Card("9H"), new Card("JS"));
+        assertThat(p.getAction(dealersHand)).isEqualTo("S");
+    }
+
+    @Test
     public void getActionWrittenInStrategyWhenCardsAreDifferentAndThereIsNoAce() {
         Gambler p = new Player(new Hand(new Card("9H"), new Card("2D")));
         Hand dealersHand = new Hand(new Card("2H"), new Card("4H"));

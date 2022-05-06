@@ -115,18 +115,20 @@ public class RoundTest {
         assertThat(d.getHand().get(2).isHidden).isTrue();
     }
 
-//    @Test
-//    public void play() {
-//        Round r = new Round(new Dealer(new Hand(new Card("10H"), new Card("7H"))),
-//                new Player(new Hand(new Card("9H"), new Card("JS"))));
-//
-//        r.setDeck(new Deck());
-//        r.getDeck().createDeck(1);
-//        r.getDeck().shuffle();
-//        r.play();
-//
-//        assertThat(r.getResult()).isEqualTo(Result.PLAYER);
-//    }
+    @Test
+    public void play() {
+        Round r = new Round(new Dealer(new Hand(new Card("10H"), new Card("7H"))),
+                new Player(new Hand(new Card("9H"), new Card("JS"))));
+
+        r.setDeck(new Deck());
+        r.getDeck().createDeck(1);
+        r.getDeck().shuffle();
+        r.setBet(100);
+        r.play();
+
+        assertThat(r.getResult()).isEqualTo(Result.PLAYER);
+        assertThat(r.getPlayer().getMoney()).isEqualTo(10100);
+    }
 
     @Test
     public void playDealerBlackjack() {
@@ -136,9 +138,11 @@ public class RoundTest {
         r.setDeck(new Deck());
         r.getDeck().createDeck(1);
         r.getDeck().shuffle();
+        r.setBet(100);
         r.play();
 
         assertThat(r.getResult()).isEqualTo(Result.DEALER);
+        assertThat(r.getPlayer().getMoney()).isEqualTo(9900);
     }
 
     @Test
@@ -147,11 +151,13 @@ public class RoundTest {
                 new Player(new Hand(new Card("AH"), new Card("JS"))));
 
         r.setDeck(new Deck());
+        r.setBet(100);
         r.getDeck().createDeck(1);
         r.getDeck().shuffle();
         r.play();
 
         assertThat(r.getResult()).isEqualTo(Result.PLAYER);
+        assertThat(r.getPlayer().getMoney()).isEqualTo(10150);
     }
 
     @Test
