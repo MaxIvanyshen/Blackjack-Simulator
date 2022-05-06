@@ -56,6 +56,12 @@ public class HandTest {
     }
 
     @Test
+    public void getCountOfTheHandWith2AcesAndOtherCard() {
+        Hand hand = new Hand(new Card("AH"), new Card("AS"), new Card("4H"), new Card("7S"));
+        assertThat(hand.getCount()).isEqualTo(13);
+    }
+
+    @Test
     public void getCardsNumberInHandOf2() {
         Hand hand = new Hand(new Card("AH"), new Card("AS"));
         assertThat(hand.getCardsNumber()).isEqualTo(2);

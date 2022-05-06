@@ -8,36 +8,36 @@ public class Round {
 
     private int bet;
 
-    private List<Player> playersList;
+    private Player player;
 
     private Result result;
 
     private Deck deck;
 
+    private boolean roundIsOn;
+
     public Round() {
-        this.playersList = new ArrayList<>();
     }
 
-    public Round(Dealer dealer, Player... players) {
-        this.playersList = new ArrayList<>();
+    public Round(Dealer dealer, Player player) {
         setDealer(dealer);
-        setPlayers(players);
+        setPlayer(player);
     }
 
     public void setDealer(Dealer dealer) {
         this.dealer = dealer;
     }
 
-    public void setPlayers(Player... players) {
-        playersList.addAll(Arrays.asList(players));
+    public void setPlayer(Player player) {
+        this.player = player;
     }
 
     public Dealer getDealer() {
         return dealer;
     }
 
-    public List<Player> getPlayers() {
-        return playersList;
+    public Player getPlayer() {
+        return player;
     }
 
     public int getBet() {
@@ -66,22 +66,21 @@ public class Round {
         return Result.PUSH;
     }
 
-    public Result checkCounts(Hand playerHand, Hand dealerHand) {
+    public void checkCounts(Hand playerHand, Hand dealerHand) {
 
         boolean blackjackPlayer = (playerHand.getCount() == 21 && playerHand.getCardsNumber() == 2);
         boolean blackjackDealer = (dealerHand.getCount() == 21 && dealerHand.getCardsNumber() == 2);
 
         if(playerHand.getCount() > 21)
-            return Result.DEALER;
+            setResult(Result.DEALER);
         else if(dealerHand.getCount() > 21)
-            return Result.PLAYER;
+            setResult(Result.PLAYER);
 
         if(blackjackPlayer)
-            return Result.PLAYER;
+            setResult(determineResult(playerHand, dealerHand));
         else if(blackjackDealer)
-            return Result.DEALER;
+            setResult(determineResult(playerHand, dealerHand));
 
-        return null;
     }
 
     public Result getResult() {
@@ -125,20 +124,51 @@ public class Round {
         dealerHand.add(hiddenCard);
     }
 
-//    public void play() {
-//        boolean roundIsOn = true;
-//        while(roundIsOn) {
-//            dealer.getAction();
-//
-//            for(Player p : playersList) {
-//                String action = p.getAction();
-//
-//                Result result = checkCounts(dealer.getHand(), p.getHand());
-//                if(result != null) {
-//                    setResult(result);
-//                    roundIsOn = false;
-//                }
-//            }
-//        }
-//    }
+    public void play() {
+
+        roundIsOn = true;
+
+        while(roundIsOn) {
+            checkCounts(player.getHand(), dealer.getHand());
+
+            if(getResult() != null)
+                break;
+
+            if(!roundIsOn)
+                break;
+        }
+    }
+
+    private void operateDealerAction() {
+
+        String dealerAction = dealer.getAction();
+
+        if(dealerAction.equals("S"))  {
+            setResult(determineResult(player.getHand(), dealer.getHand()));
+            roundIsOn = false;
+        }
+        else {
+            hit(dealer.getHand());
+            checkCounts(player.getHand(), dealer.getHand());
+        }
+    }
+
+    private void operateActions() {
+        String playerAction = player.getAction(dealer.getHand());
+
+        if(playerAction.equals("S"))
+            operateDealerAction();
+
+        else if(playerAction.equals("H")) {
+            hit(player.getHand());
+            checkCounts(player.getHand(), dealer.getHand());
+        }
+
+        else if(playerAction.equals("D")) {
+            hit(player.getHand());
+            checkCounts(player.getHand(), dealer.getHand());
+
+            operateDealerAction();
+        }
+    }
 }

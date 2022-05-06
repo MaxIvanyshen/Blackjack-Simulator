@@ -7,28 +7,13 @@ public class RoundTest {
     @Test
     public void createRoundWithEmptyConstructor() {
         Round r = new Round();
-        assertThat(r.getPlayers().size()).isEqualTo(0);
     }
 
     @Test
-    public void createRoundWithOnePlayer() {
-        Round r = new Round(new Dealer(), new Player());
+    public void createRoundWithPlayer() {
+        Round r = new Round(new Dealer(), new Player(new Hand(new Card("AH"), new Card("10H"))));
         assertThat(r.getDealer()).isNotEqualTo(null);
-        assertThat(r.getPlayers().size()).isEqualTo(1);
-    }
-
-    @Test
-    public void createRoundWith2Players() {
-        Round r = new Round(new Dealer(), new Player(), new Player());
-        assertThat(r.getDealer()).isNotEqualTo(null);
-        assertThat(r.getPlayers().size()).isEqualTo(2);
-    }
-
-    @Test
-    public void createRoundWith3Players() {
-        Round r = new Round(new Dealer(), new Player(), new Player(), new Player());
-        assertThat(r.getDealer()).isNotEqualTo(null);
-        assertThat(r.getPlayers().size()).isEqualTo(3);
+        assertThat(r.getPlayer().getHand().get(1).getCard()).isEqualTo("AH");
     }
 
     @Test
@@ -67,7 +52,8 @@ public class RoundTest {
         Round r = new Round();
         Hand playersHand = new Hand(new Card("AH"), new Card("9S"));
         Hand dealersHand = new Hand(new Card("10H"), new Card("6H"), new Card("8H"));
-        assertThat(r.checkCounts(playersHand, dealersHand)).isEqualTo(Result.PLAYER);
+        r.checkCounts(playersHand, dealersHand);
+        assertThat(r.getResult()).isEqualTo(Result.PLAYER);
     }
 
     @Test
@@ -131,11 +117,53 @@ public class RoundTest {
 
 //    @Test
 //    public void play() {
-//        Round r = new Round(new Dealer(new Hand(new Card("10H"), new Card("8H"))),
-//                new Player(new Hand(new Card("AH"), new Card("7S"))));
+//        Round r = new Round(new Dealer(new Hand(new Card("10H"), new Card("7H"))),
+//                new Player(new Hand(new Card("9H"), new Card("JS"))));
 //
+//        r.setDeck(new Deck());
+//        r.getDeck().createDeck(1);
+//        r.getDeck().shuffle();
 //        r.play();
 //
-//        assertThat(r.getResult()).isEqualTo(Result.PUSH);
+//        assertThat(r.getResult()).isEqualTo(Result.PLAYER);
 //    }
+
+    @Test
+    public void playDealerBlackjack() {
+        Round r = new Round(new Dealer(new Hand(new Card("10H"), new Card("AH"))),
+                new Player(new Hand(new Card("7H"), new Card("JS"))));
+
+        r.setDeck(new Deck());
+        r.getDeck().createDeck(1);
+        r.getDeck().shuffle();
+        r.play();
+
+        assertThat(r.getResult()).isEqualTo(Result.DEALER);
+    }
+
+    @Test
+    public void playPlayerBlackjack() {
+        Round r = new Round(new Dealer(new Hand(new Card("10H"), new Card("8H"))),
+                new Player(new Hand(new Card("AH"), new Card("JS"))));
+
+        r.setDeck(new Deck());
+        r.getDeck().createDeck(1);
+        r.getDeck().shuffle();
+        r.play();
+
+        assertThat(r.getResult()).isEqualTo(Result.PLAYER);
+    }
+
+    @Test
+    public void playPush() {
+        Round r = new Round(new Dealer(new Hand(new Card("10H"), new Card("AH"))),
+                new Player(new Hand(new Card("AH"), new Card("JS"))));
+
+        r.setDeck(new Deck());
+        r.getDeck().createDeck(1);
+        r.getDeck().shuffle();
+        r.play();
+
+        assertThat(r.getResult()).isEqualTo(Result.PUSH);
+    }
 }

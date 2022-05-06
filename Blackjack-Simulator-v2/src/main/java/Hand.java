@@ -31,8 +31,16 @@ public class Hand {
     public int getCount() {
         int count = 0;
 
-        for(int i = 0; i < cardsInHandList.size(); i++) {
+        for(int i = 0; i < cardsInHandList.size(); i++)
             count += cardsInHandList.get(i).getCount(count);
+
+        if(count > 21) {
+            for(int i = 0; i < cardsInHandList.size(); i++) {
+                if (cardsInHandList.get(i).getValue().equals("A")) {
+                    count -= 10;
+                    break;
+                }
+            }
         }
 
         return count;
