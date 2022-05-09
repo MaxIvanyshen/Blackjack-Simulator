@@ -65,9 +65,9 @@ public class PlayerTest {
 
     @Test
     public void getActionWrittenInStrategyWhenCardsAreEqual() {
-        Gambler p = new Player(new Hand(new Card("2H"), new Card("2D")));
+        Gambler p = new Player(new Hand(new Card("8H"), new Card("8D")));
         Hand dealersHand = new Hand(new Card("2H"), new Card("4H"));
-        assertThat(p.getAction(dealersHand)).isEqualTo("H");
+        assertThat(p.getAction(dealersHand)).isEqualTo("SP");
     }
 
     @Test
@@ -97,14 +97,14 @@ public class PlayerTest {
     @Test
     public void getMoney() {
         Player p = new Player();
-        assertThat(p.getMoney()).isEqualTo(10000);
+        assertThat(p.getMoney()).isEqualTo(1000);
     }
 
     @Test
     public void setMoney() {
         Player p = new Player();
-        p.setMoney(p.getMoney() * 2);
-        assertThat(p.getMoney()).isEqualTo(20000);
+        p.setMoney(p.getMoney() + 100);
+        assertThat(p.getMoney()).isEqualTo(1100);
     }
 
 }

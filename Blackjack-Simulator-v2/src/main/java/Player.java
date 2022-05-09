@@ -8,7 +8,7 @@ public class Player implements Gambler {
 
     private final Hand hand;
 
-    private long money = 10000;
+    private long money = 1000;
 
     public Player() {
         this.hand = new Hand();

@@ -26,8 +26,10 @@ public class Deck {
     }
 
     public Card pop() {
-        if(deck.size() <= getPlaceholderPosition())
+        if(deck.size() <= getPlaceholderPosition()){
+            createDeck(getSizeInDecks());
             shuffle();
+        }
         return deck.pop();
     }
 

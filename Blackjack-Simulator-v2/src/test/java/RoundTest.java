@@ -127,7 +127,6 @@ public class RoundTest {
         r.play();
 
         assertThat(r.getResult()).isEqualTo(Result.PLAYER);
-        assertThat(r.getPlayer().getMoney()).isEqualTo(10100);
     }
 
     @Test
@@ -142,7 +141,7 @@ public class RoundTest {
         r.play();
 
         assertThat(r.getResult()).isEqualTo(Result.DEALER);
-        assertThat(r.getPlayer().getMoney()).isEqualTo(9900);
+        assertThat(r.getPlayer().getMoney()).isEqualTo(900);
     }
 
     @Test
@@ -157,17 +156,90 @@ public class RoundTest {
         r.play();
 
         assertThat(r.getResult()).isEqualTo(Result.PLAYER);
-        assertThat(r.getPlayer().getMoney()).isEqualTo(10150);
+        assertThat(r.getPlayer().getMoney()).isEqualTo(1150);
     }
 
     @Test
     public void playPush() {
-        Round r = new Round(new Dealer(new Hand(new Card("10H"), new Card("AH"))),
-                new Player(new Hand(new Card("AH"), new Card("JS"))));
+        Round r = new Round(new Dealer(new Hand(new Card("10H"), new Card("7H"))),
+                new Player(new Hand(new Card("9H"), new Card("8S"))));
 
         r.setDeck(new Deck());
         r.getDeck().createDeck(1);
         r.getDeck().shuffle();
+        r.play();
+
+        assertThat(r.getResult()).isEqualTo(Result.PUSH);
+        assertThat(r.getPlayer().getMoney()).isEqualTo(1000);
+    }
+
+    @Test // not always passes cause dealer may win in the split, though this test in made to pass in most of the  times
+    public void split() {
+        Round r = new Round(new Dealer(new Hand(new Card("9H"), new Card("AH"))),
+                new Player(new Hand(new Card("8H"), new Card("8S"))));
+
+        r.setDeck(new Deck());
+        r.getDeck().createDeck(1);
+        r.getDeck().shuffle();
+        r.setBet(100);
+        r.play();
+
+        assertThat(r.splitted).isEqualTo(true);
+        assertThat(r.getPlayer().getMoney()).isEqualTo(800);
+    }
+
+    @Test
+    public void twoRounds() {
+        Round r = new Round(new Dealer(new Hand(new Card("8H"), new Card("9H"))),
+                new Player(new Hand(new Card("10H"), new Card("8S"))));
+
+        r.setDeck(new Deck());
+        r.getDeck().createDeck(1);
+        r.getDeck().shuffle();
+        r.setBet(100);
+        r.play();
+
+        assertThat(r.getResult()).isEqualTo(Result.PLAYER);
+
+        r = new Round(new Dealer(new Hand(new Card("AH"), new Card("10H"))),
+                new Player(new Hand(new Card("10H"), new Card("8S"))));
+
+        r.setDeck(new Deck());
+        r.getDeck().createDeck(1);
+        r.getDeck().shuffle();
+        r.setBet(100);
+        r.play();
+
+        assertThat(r.getResult()).isEqualTo(Result.DEALER);
+    }
+
+    @Test
+    public void threeRounds() {
+        Round r = new Round(new Dealer(new Hand(new Card("8H"), new Card("9H"))),
+                new Player(new Hand(new Card("10H"), new Card("8S"))));
+
+
+        Deck d = new Deck();
+        d.createDeck(6);
+        d.shuffle();
+        r.setDeck(d);
+        r.setBet(100);
+        r.play();
+
+        assertThat(r.getResult()).isEqualTo(Result.PLAYER);
+
+        r = new Round(new Dealer(new Hand(new Card("AH"), new Card("10H"))),
+                new Player(new Hand(new Card("10H"), new Card("8S"))));
+
+        r.setDeck(d);
+        r.play();
+
+        assertThat(r.getResult()).isEqualTo(Result.DEALER);
+
+        r = new Round(new Dealer(new Hand(new Card("JH"), new Card("7H"))),
+                new Player(new Hand(new Card("10H"), new Card("7S"))));
+
+        r.setDeck(d);
         r.play();
 
         assertThat(r.getResult()).isEqualTo(Result.PUSH);

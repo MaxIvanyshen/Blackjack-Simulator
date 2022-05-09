@@ -1,6 +1,7 @@
 DealerTest.class
-DeckTest.class
+GameTest.class
 HandTest.class
-RoundTest.class
 CardTest.class
+DeckTest.class
+RoundTest.class
 PlayerTest.class

@@ -1,9 +1,12 @@
 Gambler.class
+Main.class
 Hand.class
+Score.class
 Deck.class
 Player.class
 Card.class
 DeckPlaceholder.class
+Game.class
 Result.class
 Dealer.class
 Round.class

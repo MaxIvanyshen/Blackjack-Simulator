@@ -25,7 +25,7 @@ public class Hand {
     }
 
     public Card get(int cardNumber) {
-        return cardsInHandList.get(cardNumber-1);
+        return cardsInHandList.get(cardNumber - 1);
     }
 
     public int getCount() {

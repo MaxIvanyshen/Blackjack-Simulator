@@ -1,6 +1,6 @@
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.*;
 
 public class Round {
 
@@ -15,6 +15,13 @@ public class Round {
     private Deck deck;
 
     private boolean roundIsOn;
+
+    public boolean splitted;
+
+    private boolean blackjackPlayer;
+    private boolean blackjackDealer;
+
+    private boolean doubled;
 
     public Round() {
     }
@@ -50,26 +57,28 @@ public class Round {
 
     public Result determineResult(Hand playerHand, Hand dealerHand) {
 
+        result = Result.PUSH;
+
         boolean playerCountInBounds = playerHand.getCount() <= 21;
         boolean dealerCountInBounds = dealerHand.getCount() <= 21;
 
         if(playerCountInBounds && !dealerCountInBounds)
-            return Result.PLAYER;
+            result = Result.PLAYER;
         else if(!playerCountInBounds && dealerCountInBounds)
-            return Result.DEALER;
+            result = Result.DEALER;
 
         if(playerHand.getCount() > dealerHand.getCount())
-            return Result.PLAYER;
+            result = Result.PLAYER;
         else if(dealerHand.getCount() > playerHand.getCount())
-            return Result.DEALER;
+            result = Result.DEALER;
 
-        return Result.PUSH;
+        return result;
     }
 
     public void checkCounts(Hand playerHand, Hand dealerHand) {
 
-        boolean blackjackPlayer = (playerHand.getCount() == 21 && playerHand.getCardsNumber() == 2);
-        boolean blackjackDealer = (dealerHand.getCount() == 21 && dealerHand.getCardsNumber() == 2);
+        blackjackPlayer = (playerHand.getCount() == 21 && playerHand.getCardsNumber() == 2);
+        blackjackDealer = (dealerHand.getCount() == 21 && dealerHand.getCardsNumber() == 2);
 
         if(playerHand.getCount() > 21)
             setResult(Result.DEALER);
@@ -77,11 +86,13 @@ public class Round {
             setResult(Result.PLAYER);
 
         if(blackjackPlayer) {
-            bet *= 1.5;
-            setResult(determineResult(playerHand, dealerHand));
+            setResult(Result.PLAYER);
+            roundIsOn = false;
         }
-        else if(blackjackDealer)
-            setResult(determineResult(playerHand, dealerHand));
+        else if(blackjackDealer) {
+            setResult(Result.DEALER);
+            roundIsOn = false;
+        }
 
     }
 
@@ -90,6 +101,7 @@ public class Round {
     }
 
     public void setResult(Result result) {
+
         this.result = result;
     }
 
@@ -146,15 +158,35 @@ public class Round {
     }
 
     private void addOrSubtractMoney() {
-        if(getResult() == Result.DEALER)
-            player.setMoney(player.getMoney() - bet);
-        if(getResult() == Result.PLAYER)
-            player.setMoney(player.getMoney() + bet);
+        int operatingBet = bet;
+
+        if(result == Result.PUSH)
+            return;
+
+        if(splitted)
+            return;
+        else if(doubled)
+            operatingBet *= 2;
+
+        if(blackjackPlayer) {
+            operatingBet *= 1.5;
+        }
+
+
+        if(result == Result.PLAYER)
+            player.setMoney(player.getMoney() + operatingBet);
+        else if(result == Result.DEALER)
+            player.setMoney(player.getMoney() - operatingBet);
     }
 
     private void operateDealerAction() {
 
         String dealerAction = dealer.getAction();
+
+        if(splitted) {
+            roundIsOn = false;
+            return;
+        }
 
         if(dealerAction.equals("S"))  {
             setResult(determineResult(player.getHand(), dealer.getHand()));
@@ -177,8 +209,32 @@ public class Round {
             checkCounts(player.getHand(), dealer.getHand());
         }
 
+        else if(playerAction.equals("SP")) {
+            splitted = true;
+
+            Round[] rounds = new Round[2];
+            rounds[0] = new Round(this.dealer, new Player(new Hand(this.player.getHand().get(1), this.deck.pop())));
+            rounds[1] = new Round(this.dealer, new Player(new Hand(this.player.getHand().get(2), this.deck.pop())));
+
+            for(Round r : rounds) {
+
+                r.setDeck(this.deck);
+
+                r.setBet(bet);
+
+                r.play();
+
+                if(r.getResult() == Result.PLAYER)
+                    this.player.setMoney(this.player.getMoney() + bet);
+                else if(r.getResult() == Result.DEALER)
+                    this.player.setMoney(this.player.getMoney() - bet);
+            }
+
+            operateDealerAction();
+        }
+
         else if(playerAction.equals("D")) {
-            bet *= 2;
+            doubled = true;
 
             hit(player.getHand());
             checkCounts(player.getHand(), dealer.getHand());
