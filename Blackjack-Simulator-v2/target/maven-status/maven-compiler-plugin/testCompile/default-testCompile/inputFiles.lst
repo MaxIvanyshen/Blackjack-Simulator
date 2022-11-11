@@ -1,7 +1,6 @@
-D:\Coding\Projects\Blackjack-Simulator\Blackjack-Simulator-v2\src\test\java\RoundTest.java
-D:\Coding\Projects\Blackjack-Simulator\Blackjack-Simulator-v2\src\test\java\DealerTest.java
-D:\Coding\Projects\Blackjack-Simulator\Blackjack-Simulator-v2\src\test\java\PlayerTest.java
-D:\Coding\Projects\Blackjack-Simulator\Blackjack-Simulator-v2\src\test\java\HandTest.java
-D:\Coding\Projects\Blackjack-Simulator\Blackjack-Simulator-v2\src\test\java\DeckTest.java
-D:\Coding\Projects\Blackjack-Simulator\Blackjack-Simulator-v2\src\test\java\CardTest.java
-D:\Coding\Projects\Blackjack-Simulator\Blackjack-Simulator-v2\src\test\java\GameTest.java
+D:\Coding\Projects\Blackjack-Simulator\Blackjack-Simulator-v2\src\test\java\simulator\DeckTest.java
+D:\Coding\Projects\Blackjack-Simulator\Blackjack-Simulator-v2\src\test\java\simulator\CardTest.java
+D:\Coding\Projects\Blackjack-Simulator\Blackjack-Simulator-v2\src\test\java\simulator\PlayerTest.java
+D:\Coding\Projects\Blackjack-Simulator\Blackjack-Simulator-v2\src\test\java\simulator\HandTest.java
+D:\Coding\Projects\Blackjack-Simulator\Blackjack-Simulator-v2\src\test\java\simulator\DealerTest.java
+D:\Coding\Projects\Blackjack-Simulator\Blackjack-Simulator-v2\src\test\java\simulator\RoundTest.java
