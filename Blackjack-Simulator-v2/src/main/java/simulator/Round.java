@@ -155,6 +155,11 @@ public class Round {
         addOrSubtractMoney();
     }
 
+    public void clearHands() {
+        player.clearHand();
+        dealer.clearHand();
+    }
+
     private void addOrSubtractMoney() {
         int operatingBet = bet;
 

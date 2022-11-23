@@ -28,4 +28,8 @@ public class Dealer implements Gambler {
             return "S";
         return "H";
     }
+
+    public void clearHand() {
+        this.hand = new Hand();
+    }
 }

@@ -6,4 +6,6 @@ public interface Gambler {
 
     public String getAction(Hand... opponentHand);
 
+    public void clearHand();
+
 }

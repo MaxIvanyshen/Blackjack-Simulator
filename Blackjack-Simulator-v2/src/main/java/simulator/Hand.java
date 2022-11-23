@@ -52,8 +52,6 @@ public class Hand {
         return cardsInHandList.size();
     }
 
-    public void clear() {cardsInHandList.clear();}
-
     public boolean oneCardIsAce() {
         return get(1).getValue().equals("A") || get(2).getValue().equals("A");
     }

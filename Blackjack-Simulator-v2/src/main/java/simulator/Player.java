@@ -103,6 +103,10 @@ public class Player implements Gambler {
         return rowsList.get(neededRow).split(" ")[neededColumn];
     }
 
+    public void clearHand() {
+        this.hand = new Hand();
+    }
+
 }
 
 
