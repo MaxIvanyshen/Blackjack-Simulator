@@ -1,5 +1,5 @@
 package interactors;
-;
+
 import org.assertj.core.internal.IterableElementComparisonStrategy;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
