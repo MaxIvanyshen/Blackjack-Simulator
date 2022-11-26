@@ -10,10 +10,10 @@ public class RoundInteractor {
         return getRound();
     }
 
-    public void standartDeck() {
-        Deck standartDeck = new Deck();
-        standartDeck.createDeck(6);
-        round.setDeck(standartDeck);
+    public void standardDeck() {
+        Deck standardDeck = new Deck();
+        standardDeck.createDeck(6);
+        round.setDeck(standardDeck);
     }
 
     public Round getRound() {

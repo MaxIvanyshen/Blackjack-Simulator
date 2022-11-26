@@ -1,7 +1,5 @@
 package interactors;
 
-import org.assertj.core.internal.IterableElementComparisonStrategy;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import simulator.*;
@@ -25,7 +23,7 @@ public class RoundInteractorTest {
     @Test
     public void testCreatingWithStandartDeckForTheRound() throws Exception {
         interactor.newRound();
-        interactor.standartDeck();
+        interactor.standardDeck();
         assertNotNull(interactor.getRound().getDeck());
         assertEquals(6, interactor.getRound().getDeck().getSizeInDecks());
     }
@@ -40,7 +38,7 @@ public class RoundInteractorTest {
     @Test
     public void testRunningRoundWithInteractor() throws Exception {
         interactor.newRound();
-        interactor.standartDeck();
+        interactor.standardDeck();
         interactor.runRound();
         assertNotNull(interactor.getRound().getResult());
     }
@@ -49,7 +47,7 @@ public class RoundInteractorTest {
     public void testSettingRoundToInteractor() throws Exception {
         interactor.setRound(new Round(new Dealer(new Hand(new Card("8H"), new Card("9H"))),
                 new Player(new Hand(new Card("10H"), new Card("8S")))));
-        interactor.standartDeck();
+        interactor.standardDeck();
         interactor.runRound();
         assertEquals(Result.PLAYER, interactor.getRound().getResult());
     }
