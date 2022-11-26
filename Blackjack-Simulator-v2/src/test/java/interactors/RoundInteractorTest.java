@@ -66,8 +66,8 @@ public class RoundInteractorTest {
         reqModel.round = new Round(new Dealer(new Hand()), new Player(new Hand()), deck, 100);
         RoundResponseModel resModel = interactor.run(reqModel);
 
-        assertEquals(interactor.getRound().getDeck().getSizeInCards(), resModel.deck.getSizeInCards());
-        assertNotNull(resModel.result);
+        assertEquals(interactor.getRound().getDeck().getSizeInCards(), resModel.round.getDeck().getSizeInCards());
+        assertNotNull(resModel.round.getResult());
     }
 
 }

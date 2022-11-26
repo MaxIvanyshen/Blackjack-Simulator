@@ -46,8 +46,9 @@ public class PlayerTest {
 
     @Test
     public void getActionWhenCountIsHigherThan8AndLowerThan17() {
-        Gambler p = new Player(new Hand(new Card("2H"), new Card("10D")));
+        Player p = new Player(new Hand(new Card("2H"), new Card("10D")));
         Hand dealersHand = new Hand(new Card("2H"), new Card("4H"));
+        p.setStrategyFile("./strategy.txt");
         assertThat(p.getAction(dealersHand)).isEqualTo("H");
     }
 
@@ -60,46 +61,52 @@ public class PlayerTest {
 
     @Test
     public void getActionWrittenInStrategyWhenCardsAreDifferentAndThereIsNoAce() {
-        Gambler p = new Player(new Hand(new Card("9H"), new Card("2D")));
+        Player p = new Player(new Hand(new Card("9H"), new Card("2D")));
         Hand dealersHand = new Hand(new Card("2H"), new Card("4H"));
+        p.setStrategyFile("./strategy.txt");
         assertThat(p.getAction(dealersHand)).isEqualTo("D");
     }
 
     @Test
     public void getActionWrittenInStrategyWhenCardsAreDifferentAndThereIsAce() {
-        Gambler p = new Player(new Hand(new Card("AH"), new Card("9D")));
+        Player p = new Player(new Hand(new Card("AH"), new Card("9D")));
         Hand dealersHand = new Hand(new Card("10H"), new Card("4H"));
+        p.setStrategyFile("./strategy.txt");
         assertThat(p.getAction(dealersHand)).isEqualTo("S");
     }
 
     @Test
     public void getActionWrittenInStrategyWhenCardsAreEqual() {
-        Gambler p = new Player(new Hand(new Card("8H"), new Card("8D")));
+        Player p = new Player(new Hand(new Card("8H"), new Card("8D")));
         Hand dealersHand = new Hand(new Card("2H"), new Card("4H"));
+        p.setStrategyFile("./strategy.txt");
         assertThat(p.getAction(dealersHand)).isEqualTo("SP");
     }
 
     @Test
     public void getActionWrittenInStrategyWhenCardsAreAces() {
-        Gambler p = new Player(new Hand(new Card("AH"), new Card("AD")));
+        Player p = new Player(new Hand(new Card("AH"), new Card("AD")));
         Hand dealersHand = new Hand(new Card("2H"), new Card("4H"));
+        p.setStrategyFile("./strategy.txt");
         assertThat(p.getAction(dealersHand)).isEqualTo("SP");
     }
 
     @Test
     public void getActionWith3Cards() {
-        Gambler p = new Player(new Hand(new Card("6H"), new Card("2D")));
+        Player p = new Player(new Hand(new Card("6H"), new Card("2D")));
         p.getHand().add(new Card("2H"));
         Hand dealersHand = new Hand(new Card("10H"), new Card("4H"));
+        p.setStrategyFile("./strategy.txt");
         assertThat(p.getAction(dealersHand)).isEqualTo("H");
     }
 
     @Test
     public void getActionWith4Cards() {
-        Gambler p = new Player(new Hand(new Card("6H"), new Card("2D")));
+        Player p = new Player(new Hand(new Card("6H"), new Card("2D")));
         p.getHand().add(new Card("2H"));
         p.getHand().add(new Card("6S"));
         Hand dealersHand = new Hand(new Card("10H"), new Card("4H"));
+        p.setStrategyFile("./strategy.txt");
         assertThat(p.getAction(dealersHand)).isEqualTo("H");
     }
 

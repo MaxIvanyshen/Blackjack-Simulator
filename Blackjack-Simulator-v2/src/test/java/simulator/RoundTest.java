@@ -258,6 +258,7 @@ public class RoundTest {
         Round r = new Round(new Dealer(new Hand()),
                 new Player(new Hand()));
 
+        r.getPlayer().setStrategyFile("./strategy.txt");
 
         Deck d = new Deck();
         d.createDeck(6);
@@ -276,6 +277,8 @@ public class RoundTest {
     public void testClearingHands() throws Exception {
         Round r = new Round(new Dealer(new Hand()),
                 new Player(new Hand()));
+
+        r.getPlayer().setStrategyFile("./strategy.txt");
 
 
         Deck d = new Deck();
