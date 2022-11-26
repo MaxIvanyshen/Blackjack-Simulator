@@ -1,5 +1,7 @@
 package interactors;
 
+import models.RoundRequestModel;
+import models.RoundResponseModel;
 import simulator.*;
 
 public class RoundInteractor {
@@ -20,9 +22,15 @@ public class RoundInteractor {
         return round;
     }
 
-    public void runRound() {
+    public void setNewPlayer() {
         round.setPlayer(new Player(new Hand()));
+    }
+
+    public void setNewDealer() {
         round.setDealer(new Dealer(new Hand()));
+    }
+
+    public void runRound() {
         round.deal(round.getPlayer());
         round.deal(round.getDealer());
         round.play();
@@ -36,5 +44,11 @@ public class RoundInteractor {
         Deck customDeck = new Deck();
         customDeck.createDeck(decksNumber);
         round.setDeck(customDeck);
+    }
+
+    public RoundResponseModel run(RoundRequestModel reqModel) {
+        round = reqModel.round;
+        runRound();
+        return new RoundResponseModel(round.getResult(), round.getDeck(), round.getPlayer());
     }
 }

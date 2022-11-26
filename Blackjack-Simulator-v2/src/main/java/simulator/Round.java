@@ -29,6 +29,13 @@ public class Round {
         setPlayer(player);
     }
 
+    public Round(Dealer dealer,Player player, Deck deck, int bet) {
+        this.dealer = dealer;
+        this.bet = bet;
+        this.player = player;
+        this.deck = deck;
+    }
+
     public void setDealer(Dealer dealer) {
         this.dealer = dealer;
     }

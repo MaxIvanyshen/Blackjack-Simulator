@@ -1,8 +1,12 @@
 package interactors;
 
+import models.RoundRequestModel;
+import models.RoundResponseModel;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import simulator.*;
+
+import javax.net.ssl.SNIHostName;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -39,6 +43,8 @@ public class RoundInteractorTest {
     public void testRunningRoundWithInteractor() throws Exception {
         interactor.newRound();
         interactor.standardDeck();
+        interactor.setNewPlayer();
+        interactor.setNewDealer();
         interactor.runRound();
         assertNotNull(interactor.getRound().getResult());
     }
@@ -50,6 +56,18 @@ public class RoundInteractorTest {
         interactor.standardDeck();
         interactor.runRound();
         assertEquals(Result.PLAYER, interactor.getRound().getResult());
+    }
+
+    @Test
+    public void testSendingRequestModelAndReceivingResponseModel() throws Exception {
+        RoundRequestModel reqModel = new RoundRequestModel();
+        Deck deck = new Deck();
+        deck.createDeck(6);
+        reqModel.round = new Round(new Dealer(new Hand()), new Player(new Hand()), deck, 100);
+        RoundResponseModel resModel = interactor.run(reqModel);
+
+        assertEquals(interactor.getRound().getDeck().getSizeInCards(), resModel.deck.getSizeInCards());
+        assertNotNull(resModel.result);
     }
 
 }
