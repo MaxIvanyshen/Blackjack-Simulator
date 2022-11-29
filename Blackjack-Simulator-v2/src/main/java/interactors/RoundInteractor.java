@@ -48,8 +48,6 @@ public class RoundInteractor {
 
     public RoundResponseModel run(RoundRequestModel reqModel) {
         round = reqModel.round;
-        setNewDealer();
-        setNewPlayer();
         runRound();
         return new RoundResponseModel(round);
     }
