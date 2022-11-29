@@ -15,6 +15,7 @@ public class Main {
         String strategyPath = "";
 
 
+        player.setStrategyFile("./strategy.txt");
 
         reqModel.round = new Round(new Dealer(new Hand()), player, deck, 100);
 

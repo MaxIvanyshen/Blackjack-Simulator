@@ -12,9 +12,8 @@ public class Player implements Gambler {
 
     private long money = 1000;
 
-//    private String strategyFilePath;
+    private String strategyFilePath;
 
-    private File strategyFile;
     public Player() {
         this.hand = new Hand();
     }
@@ -94,6 +93,7 @@ public class Player implements Gambler {
     }
 
     private String findActionAtNeededColumnAndRow(int neededColumn, int neededRow) throws IOException {
+        File strategyFile = new File(getStrategyFile());
         Scanner fileScanner = new Scanner(strategyFile);
 
         List<String> rowsList = new ArrayList<>();
@@ -103,7 +103,7 @@ public class Player implements Gambler {
 
         fileScanner.close();
 
-        return rowsList.get(neededRow).split(" ")[neededColumn];
+       return rowsList.get(neededRow).split(" ")[neededColumn];
     }
 
     public void clearHand() {
@@ -111,7 +111,11 @@ public class Player implements Gambler {
     }
 
     public void setStrategyFile(String strategyFilePath) {
-        this.strategyFile = new File(strategyFilePath);
+        this.strategyFilePath = strategyFilePath;
+    }
+
+    public String getStrategyFile() {
+        return strategyFilePath;
     }
 }
 
