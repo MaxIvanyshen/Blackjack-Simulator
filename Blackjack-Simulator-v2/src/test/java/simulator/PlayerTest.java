@@ -109,14 +109,4 @@ public class PlayerTest {
         p.setStrategyFile("./strategy.txt");
         assertThat(p.getAction(dealersHand)).isEqualTo("H");
     }
-
-    @Test
-    public void testSettingStrategyFile() throws Exception {
-        Player p = new Player(new Hand(new Card("2H"), new Card("10D")));
-        Hand dealersHand = new Hand(new Card("2H"), new Card("4H"));
-
-        p.setStrategyFile("./strategy.txt");
-
-        assertThat(p.getAction(dealersHand)).isEqualTo("H");
-    }
 }
