@@ -1,7 +1,0 @@
-simulator\CardTest.class
-simulator\HandTest.class
-simulator\PlayerTest.class
-simulator\DeckTest.class
-simulator\RoundTest.class
-interactors\RoundInteractorTest.class
-simulator\DealerTest.class

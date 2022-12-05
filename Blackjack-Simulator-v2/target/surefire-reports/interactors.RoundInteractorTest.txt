@@ -1,8 +1,0 @@
--------------------------------------------------------------------------------
-Test set: interactors.RoundInteractorTest
--------------------------------------------------------------------------------
-Tests run: 2, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 0.027 sec <<< FAILURE!
-interactors.RoundInteractorTest.testCreatingAnEmptyRoundWithInteractor()  Time elapsed: 0.004 sec  <<< FAILURE!
-java.lang.NullPointerException: Cannot invoke "interactors.RoundInteractor.newRound()" because "this.interactor" is null
-	at interactors.RoundInteractorTest.testCreatingAnEmptyRoundWithInteractor(RoundInteractorTest.java:22)
-
