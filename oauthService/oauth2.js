@@ -2,15 +2,19 @@ const {OAuth2Client} = require('google-auth-library');
 const http = require('http');
 const url = require('url');
 const open = require('open');
+const fs = require('fs')
 const destroyer = require('server-destroy');
+
+let accessToken = "";
 
 // Download your OAuth2 configuration from the Google
 const keys = require('./oauth2.keys.json');
+const { CLOUD_RESOURCE_MANAGER } = require('google-auth-library/build/src/auth/baseexternalclient');
 
 /**
 * Start by acquiring a pre-authenticated oAuth2 client.
 */
-async function main() {
+async function oauth2() {
   const oAuth2Client = await getAuthenticatedClient();
   // Make a simple request to the People API using our pre-authenticated client. The `request()` method
   // takes an GaxiosOptions object.  Visit https://github.com/JustinBeckwith/gaxios.
@@ -23,7 +27,9 @@ async function main() {
   const tokenInfo = await oAuth2Client.getTokenInfo(
     oAuth2Client.credentials.access_token
   );
-  console.log("Your token info: " +tokenInfo);
+  accessToken = oAuth2Client.credentials.access_token;
+  console.log("access token: " + accessToken);
+  console.log(tokenInfo);
 }
 
 /**
@@ -45,6 +51,12 @@ function getAuthenticatedClient() {
       access_type: 'offline',
       scope: 'https://www.googleapis.com/auth/userinfo.profile',
     });
+
+    try {
+      fs.writeFileSync('authorize_url.txt', authorizeUrl);
+    } catch (err) {
+      console.error(err);
+    }
 
     // Open an http server to accept the oauth callback. In this simple example, the
     // only request to our webserver is to /oauth2callback?code=<code>
@@ -72,11 +84,10 @@ function getAuthenticatedClient() {
         }
       })
       .listen(3000, () => {
-        // open the browser to the authorize url to start the workflow
-        open(authorizeUrl, {wait: false}).then(cp => cp.unref());
+        console.log("need redirecting");
       });
     destroyer(server);
   });
 }
 
-main().catch(console.error);
+export default oauth2;
