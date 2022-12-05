@@ -5,6 +5,7 @@ const url = require('url');
 const open = require('open');
 const destroyer = require('server-destroy');
 const cookieParser = require('cookie-parser');
+const puppeteer = require('puppeteer');
 
 const app = express();
 
@@ -56,7 +57,7 @@ async function oauth2() {
 * workflow.  Return the full client to the callback.
 */
 function getAuthenticatedClient() {
-  return new Promise((resolve, reject) => {
+  return new Promise(async (resolve, reject) => {
     // create an oAuth client to authorize the API call.  Secrets are kept in a `keys.json` file,
     // which should be downloaded from the Google Developers Console.
     const oAuth2Client = new OAuth2Client(
@@ -83,7 +84,7 @@ function getAuthenticatedClient() {
             const qs = new url.URL(req.url, 'http://localhost:8080/hello')
               .searchParams;
             const code = qs.get('code');
-            res.end('Authentication successful! Please return to the console.');
+            res.end('<h1>Authentication successful! Now you can close this page.</h1>');
             server.destroy();
 
             // Now that we have the code, use that to acquire tokens.
