@@ -11,15 +11,14 @@ const app = express();
 
 app.use(cookieParser());
 
-let token = "abc";
-
 app.get('/login', async (req, res) => {
-  token = await oauth2(res);
+  let userInfo = await oauth2(res);
   res.status(200);
-  res.cookie("access_token", token, {
+  res.cookie("access_token", userInfo.access_token, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
   })
+  console.log(userInfo);
   res.send();
 });
 
@@ -28,10 +27,8 @@ app.listen(8080, () => {
     console.log("app's running on localhost:8080");
 });
 
-
 // Download your OAuth2 configuration from the Google
 const keys = require('./oauth2.keys.json');
-const { CLOUD_RESOURCE_MANAGER } = require('google-auth-library/build/src/auth/baseexternalclient');
 
 /**
 * Start by acquiring a pre-authenticated oAuth2 client.
@@ -42,6 +39,7 @@ async function oauth2() {
   // takes an GaxiosOptions object.  Visit https://github.com/JustinBeckwith/gaxios.
   const url = 'https://people.googleapis.com/v1/people/me?personFields=names';
   const res = await oAuth2Client.request({url});
+  const name = res.data.names[0].displayName;
 
   // After acquiring an access_token, you may want to check on the audience, expiration,
   // or original scopes requested.  You can do that with the `getTokenInfo` method.
@@ -49,7 +47,13 @@ async function oauth2() {
     oAuth2Client.credentials.access_token
   );
 
-  return oAuth2Client.credentials.access_token;;
+  return {
+    name: name,
+    email: tokenInfo.email,
+    access_token: oAuth2Client.credentials.access_token, 
+    expires: tokenInfo.expiry_date, 
+    refresh_token: oAuth2Client.credentials.refresh_token
+  };
 }
 
 /**
@@ -70,6 +74,7 @@ function getAuthenticatedClient() {
     const authorizeUrl = oAuth2Client.generateAuthUrl({
       access_type: 'offline',
       scope: ['https://www.googleapis.com/auth/userinfo.profile',"https://www.googleapis.com/auth/userinfo.email"],
+      prompt: 'consent'
     });
 
     open(authorizeUrl, {wait: false}).then(cp => cp.unref());
@@ -81,7 +86,7 @@ function getAuthenticatedClient() {
         try {
           if (req.url.indexOf('/oauth2callback') > -1) {
             // acquire the code from the querystring, and close the web server.
-            const qs = new url.URL(req.url, 'http://localhost:8080/hello')
+            const qs = new url.URL(req.url, 'http://localhost:8080/')
               .searchParams;
             const code = qs.get('code');
             res.end('<h1>Authentication successful! Now you can close this page.</h1>');

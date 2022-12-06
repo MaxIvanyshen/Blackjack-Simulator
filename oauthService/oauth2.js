@@ -90,4 +90,4 @@ function getAuthenticatedClient() {
   });
 }
 
-export default oauth2;
+oauth2().catch(console.log("error"));
