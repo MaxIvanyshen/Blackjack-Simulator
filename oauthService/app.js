@@ -5,53 +5,50 @@ const url = require('url');
 const open = require('open');
 const destroyer = require('server-destroy');
 const cookieParser = require('cookie-parser');
-const puppeteer = require('puppeteer');
+const db = require('./db');
+const bodyParser = require('body-parser');
 
 const app = express();
 
 app.use(cookieParser());
+app.use(bodyParser.json());
 
 app.get('/login', async (req, res) => {
-  let userInfo = await oauth2(res);
+  let userInfo = await authenticate();
   res.status(200);
   res.cookie("access_token", userInfo.access_token, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
+    httpOnly: true
   })
-  console.log(userInfo);
+  db.save(userInfo);
   res.send();
 });
-
 
 app.listen(8080, () => {
     console.log("app's running on localhost:8080");
 });
 
-// Download your OAuth2 configuration from the Google
-const keys = require('./oauth2.keys.json');
 
 /**
 * Start by acquiring a pre-authenticated oAuth2 client.
 */
-async function oauth2() {
+async function authenticate() {
   const oAuth2Client = await getAuthenticatedClient();
-  // Make a simple request to the People API using our pre-authenticated client. The `request()` method
-  // takes an GaxiosOptions object.  Visit https://github.com/JustinBeckwith/gaxios.
+
   const url = 'https://people.googleapis.com/v1/people/me?personFields=names';
   const res = await oAuth2Client.request({url});
   const name = res.data.names[0].displayName;
 
   // After acquiring an access_token, you may want to check on the audience, expiration,
   // or original scopes requested.  You can do that with the `getTokenInfo` method.
-  const tokenInfo = await oAuth2Client.getTokenInfo(
+  const accessTokenInfo = await oAuth2Client.getTokenInfo(
     oAuth2Client.credentials.access_token
   );
 
   return {
     name: name,
-    email: tokenInfo.email,
+    email: accessTokenInfo.email,
     access_token: oAuth2Client.credentials.access_token, 
-    expires: tokenInfo.expiry_date, 
+    expires: accessTokenInfo.expiry_date, 
     refresh_token: oAuth2Client.credentials.refresh_token
   };
 }
@@ -61,16 +58,17 @@ async function oauth2() {
 * workflow.  Return the full client to the callback.
 */
 function getAuthenticatedClient() {
+
+  const keys = require('./oauth2.keys.json');
+
   return new Promise(async (resolve, reject) => {
-    // create an oAuth client to authorize the API call.  Secrets are kept in a `keys.json` file,
-    // which should be downloaded from the Google Developers Console.
+
     const oAuth2Client = new OAuth2Client(
       keys.web.client_id,
       keys.web.client_secret,
       keys.web.redirect_uris[0]
     );
 
-    // Generate the url that will be used for the consent dialog.
     const authorizeUrl = oAuth2Client.generateAuthUrl({
       access_type: 'offline',
       scope: ['https://www.googleapis.com/auth/userinfo.profile',"https://www.googleapis.com/auth/userinfo.email"],
