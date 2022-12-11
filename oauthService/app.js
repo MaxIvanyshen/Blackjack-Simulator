@@ -8,6 +8,8 @@ const cookieParser = require('cookie-parser');
 const db = require('./db');
 const bodyParser = require('body-parser');
 
+const keys = require('./oauth2.keys.json');
+
 const app = express();
 
 app.use(cookieParser());
@@ -19,8 +21,54 @@ app.get('/login', async (req, res) => {
   res.cookie("access_token", userInfo.access_token, {
     httpOnly: true
   })
-  db.save(userInfo);
+  // db.save(userInfo);
+  console.log(userInfo);
   res.send();
+});
+
+app.post('/refresh', async(req, res) => {
+  let access_token = req.headers.authorization.split(" ")[1];
+
+  // const arr = access_token.split(" ");
+  // access_token = arr[1];
+  
+  console.log(access_token);
+
+
+  if(access_token == undefined && access_token == null) {
+    res.status(403);
+    res.send();
+  }
+
+  let user = db.findByAccessToken(access_token);
+
+  let refreshRequest = {
+    "client_id": keys.web.client_id,
+    "client_secret": keys.web.client_secret,
+    "refresh_token": user.refresh_token,
+    "grant_type": "refresh_token"
+  }
+
+  fetch("https://www.googleapis.com/oauth2/v4/token", {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json; charset=UTF-8'
+    },
+    body: JSON.stringify(refreshRequest)
+  }).then(res => res.json())
+  .then(data => {
+    user.access_token = data.access_token;
+    if(user.access_token != data.access_token)
+      console.log("WTF");
+  });
+
+  // db.save(user); //TODO user should be updated in db
+  console.log(user);
+
+  res.status(200);
+  res.setHeader("Authorization", "Bearer " + user.access_token);
+  res.send();
+
 });
 
 app.listen(8080, () => {
@@ -58,8 +106,6 @@ async function authenticate() {
 * workflow.  Return the full client to the callback.
 */
 function getAuthenticatedClient() {
-
-  const keys = require('./oauth2.keys.json');
 
   return new Promise(async (resolve, reject) => {
 
