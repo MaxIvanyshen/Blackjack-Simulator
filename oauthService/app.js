@@ -7,8 +7,10 @@ const destroyer = require('server-destroy');
 const cookieParser = require('cookie-parser');
 const db = require('./db');
 const bodyParser = require('body-parser');
+const fetch = require('node-fetch');
 
 const keys = require('./oauth2.keys.json');
+const { ConsoleMessage } = require('puppeteer');
 
 const app = express();
 
@@ -18,29 +20,20 @@ app.use(bodyParser.json());
 app.get('/login', async (req, res) => {
   let userInfo = await authenticate();
   res.status(200);
-  res.cookie("access_token", userInfo.access_token, {
-    httpOnly: true
-  })
-  // db.save(userInfo);
-  console.log(userInfo);
+  res.setHeader("Authorization", "Bearer " + userInfo.access_token);
+  await db.save(userInfo);
   res.send();
 });
 
-app.post('/refresh', async(req, res) => {
+app.post('/refresh', async (req, res) => {
   let access_token = req.headers.authorization.split(" ")[1];
-
-  // const arr = access_token.split(" ");
-  // access_token = arr[1];
-  
-  console.log(access_token);
-
 
   if(access_token == undefined && access_token == null) {
     res.status(403);
     res.send();
   }
 
-  let user = db.findByAccessToken(access_token);
+  let user = await db.findByAccessToken(access_token);
 
   let refreshRequest = {
     "client_id": keys.web.client_id,
@@ -49,7 +42,7 @@ app.post('/refresh', async(req, res) => {
     "grant_type": "refresh_token"
   }
 
-  fetch("https://www.googleapis.com/oauth2/v4/token", {
+  let response = await fetch("https://www.googleapis.com/oauth2/v4/token", {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json; charset=UTF-8'
@@ -57,13 +50,13 @@ app.post('/refresh', async(req, res) => {
     body: JSON.stringify(refreshRequest)
   }).then(res => res.json())
   .then(data => {
-    user.access_token = data.access_token;
-    if(user.access_token != data.access_token)
-      console.log("WTF");
+    return data;
   });
 
-  // db.save(user); //TODO user should be updated in db
-  console.log(user);
+
+  user.access_token = response.access_token
+  user.expires = '' + Math.floor(new Date().getTime()/1000 + response.expires_in);
+  await db.save(user);
 
   res.status(200);
   res.setHeader("Authorization", "Bearer " + user.access_token);
